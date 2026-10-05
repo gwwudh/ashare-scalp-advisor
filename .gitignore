@@ -1,0 +1,27 @@
+# 本地配置与运行数据，不入库
+.env
+.env.*
+!.env.example
+config.local.yaml
+watchlist.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 日志与运行时产物
+*.log
+logs/
+data/
+.db

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>聚力盯盘系统</title>
+  <link rel="stylesheet" href="__APP_BASE__/static/style.css?v=20260909dedupe" />
+  <script>window.APP_BASE = "__APP_BASE__";</script>
+  <script src="https://registry.npmmirror.com/lightweight-charts/4.2.0/files/dist/lightweight-charts.standalone.production.js"></script>
+  <script>
+    // 国内镜像失败时回退 jsDelivr，避免 LightweightCharts 未加载导致整页白屏
+    if (typeof LightweightCharts === "undefined") {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"><\/script>');
+    }
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">聚力盯盘系统</div>
+    <div class="slogan">炒股的本质就是等待！</div>
+  </header>
+
+  <main class="layout">
+    <aside class="side">
+      <div class="side-main">
+        <h2>自选管理</h2>
+        <div class="wl-actions">
+          <button type="submit" form="addForm">添加自选</button>
+          <button id="delBtn" class="danger" type="button">删除当前自选</button>
+        </div>
+        <form id="addForm" class="add-form">
+          <input id="addCode" name="code" placeholder="代码 如 600519" maxlength="8" required />
+        </form>
+
+        <h2>自选局面</h2>
+        <div id="cards" class="cards"></div>
+        <h2 class="feed-title">通知流</h2>
+        <div id="feed" class="feed"></div>
+      </div>
+    </aside>
+    <section class="chart-pane">
+      <div class="chart-head">
+        <select id="symbol" class="symbol-select"></select>
+        <select id="tf">
+          <option value="fs">分时</option>
+          <option value="1m">1 分钟</option>
+          <option value="5m" selected>5 分钟</option>
+          <option value="day">日线</option>
+        </select>
+        <div id="livePrice" class="live-price">
+          <span class="lp-value">--</span>
+          <span class="lp-chg"></span>
+        </div>
+        <span id="status" class="status">连接中…</span>
+      </div>
+
+      <div class="ind-bar" id="indBar">
+        <span class="ind-bar-label">指标</span>
+        <label class="ind-chip"><input type="checkbox" data-ind="volume" checked /> 成交量</label>
+        <label class="ind-chip"><input type="checkbox" data-ind="boll" /> BOLL</label>
+        <label class="ind-chip"><input type="checkbox" data-ind="macd" /> MACD</label>
+        <label class="ind-chip"><input type="checkbox" data-ind="kdj" /> KDJ</label>
+        <label class="ind-chip"><input type="checkbox" data-ind="rsi" /> RSI</label>
+        <label class="ind-chip"><input type="checkbox" data-ind="custom" id="customToggle" /> 自定义</label>
+        <button type="button" id="customCfgBtn" class="ind-cfg-btn">配置自定义</button>
+      </div>
+
+      <div class="chart-body">
+        <div class="chart-stack">
+          <div id="chart" class="chart main-chart"></div>
+          <div class="ind-pane-wrap" data-pane="macd" hidden>
+            <div class="ind-pane-title">MACD</div>
+            <div id="pane-macd" class="ind-pane"></div>
+          </div>
+          <div class="ind-pane-wrap" data-pane="kdj" hidden>
+            <div class="ind-pane-title">KDJ</div>
+            <div id="pane-kdj" class="ind-pane"></div>
+          </div>
+          <div class="ind-pane-wrap" data-pane="rsi" hidden>
+            <div class="ind-pane-title">RSI</div>
+            <div id="pane-rsi" class="ind-pane"></div>
+          </div>
+          <div class="ind-pane-wrap" data-pane="custom" hidden>
+            <div class="ind-pane-title" id="customPaneTitle">自定义</div>
+            <div id="pane-custom" class="ind-pane"></div>
+          </div>
+        </div>
+        <aside class="detail-col">
+          <div id="detail" class="detail-board"></div>
+          <div id="quoteStats" class="quote-stats">
+            <div class="qs-title">行情综合</div>
+            <div class="qs-grid" id="quoteStatsGrid">等待行情…</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="customModal" class="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong>自定义指标配置</strong>
+        <button type="button" id="customModalClose" class="modal-x">×</button>
+      </div>
+      <form id="customForm" class="modal-form">
+        <label>名称
+          <input name="name" value="我的指标" maxlength="20" />
+        </label>
+        <label>类型
+          <select name="type" id="customType">
+            <option value="rsi">RSI（可调周期）</option>
+            <option value="macd">MACD（可调参数）</option>
+            <option value="ema_diff">双均线差值 EMA快−EMA慢</option>
+          </select>
+        </label>
+        <div id="customFields" class="custom-fields"></div>
+        <label class="check-row"><input type="checkbox" name="enabled" checked /> 启用并显示副图</label>
+        <div class="modal-actions">
+          <button type="button" id="customCancel">取消</button>
+          <button type="submit">保存</button>
+        </div>
+      </form>
+      <p class="modal-hint">说明：主图叠加类（BOLL）与副图类（成交量/MACD/KDJ/RSI/自定义）分轨渲染，时间轴联动。</p>
+    </div>
+  </div>
+
+  <script src="__APP_BASE__/static/indicators.js?v=20260904a"></script>
+  <script src="__APP_BASE__/static/app.js?v=20260909dedupe"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# 盘中超短顾问 — 依赖
+# 核心：FastAPI 提供 Web/API，httpx 拉行情，PyYAML 读配置
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.6
+httpx>=0.27
+PyYAML>=6.0
+python-dotenv>=1.0

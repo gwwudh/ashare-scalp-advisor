@@ -1,0 +1,44 @@
+# 盘中超短顾问 — 全局配置
+poll:
+  quote_interval_sec: 5
+  kline_interval_sec: 30
+  situation_interval_sec: 60
+
+bars:
+  primary: "5m"
+  trigger: "1m"
+  primary_limit: 120
+  trigger_limit: 240
+
+levels:
+  # 开盘锁定三级支撑/压力；仅突破 R3 或跌破 S3 时整组重置
+  lookback: 40
+  zone_pct: 0.003
+  breakout_buffer_pct: 0.002
+  hold_bars: 2
+
+risk:
+  hard_stop_pct: 5.0
+  hard_take_pct: 20.0
+  default_atr_mult_sl: 1.2
+  default_rr: 2.0
+
+notify:
+  cooldown_sec: 180
+  webhook_url: ""
+  use_llm: true
+
+llm:
+  # 可选能力：不填则不启用 AI 文案（价格/局面解读自动降级为纯规则输出，不影响盯盘）
+  # 支持任意 OpenAI 兼容接口（OpenAI / DeepSeek / 智谱 / 本地 vLLM·Ollama 等）
+  # 仓库内不内置任何服务商地址或个人密钥，请自行填写或改用环境变量
+  enabled: true
+  base_url: ""
+  model: ""
+  timeout_sec: 25
+  # 密钥只走环境变量 LLM_API_KEY，或写在本地 .env（已 gitignore）
+  # 环境变量优先级高于本文件：LLM_BASE_URL / LLM_MODEL / LLM_API_KEY
+
+server:
+  host: "127.0.0.1"
+  port: 8765
